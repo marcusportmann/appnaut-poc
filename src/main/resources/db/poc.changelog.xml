@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+  <property name="blob_type" value="blob" dbms="h2"/>
+  <property name="blob_type" value="bytea" dbms="postgresql"/>
+  <property name="blob_type" value="blob" dbms="oracle"/>
+  <property name="blob_type" value="varbinary(max)" dbms="mssql"/>
+  <property name="now" value="now()" dbms="h2"/>
+  <property name="now" value="now()" dbms="postgresql"/>
+  <property name="now" value="sysdate" dbms="oracle"/>
+  <property name="now" value="CURRENT_TIMESTAMP" dbms="mssql"/>
+
+  <changeSet id="poc-1.0.0" author="Marcus Portmann">
+    <comment>Demo - 1.0.0</comment>
+    <sql dbms="h2" endDelimiter=";">
+      CREATE SCHEMA IF NOT EXISTS poc
+    </sql>
+    <sql dbms="postgresql" endDelimiter=";">
+      CREATE SCHEMA IF NOT EXISTS poc
+    </sql>
+    <sql dbms="mssql" endDelimiter=";">
+      CREATE SCHEMA poc
+    </sql>
+
+    <createTable schemaName="poc" tableName="data" remarks="Data">
+      <column name="id" type="bigint" remarks="The ID for the data">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="integer_value" type="int" remarks="The integer value for the data"/>
+      <column name="string_value" type="nvarchar(4000)" remarks="The string value for the data"/>
+      <column name="date_value" type="date" remarks="The date value for the data"/>
+      <column name="timestamp_value" type="timestamp" remarks="The timestamp value for the data"/>
+    </createTable>
+
+    <insert schemaName="poc" tableName="data">
+      <column name="id" value="1"/>
+      <column name="integer_value" value="12345"/>
+    </insert>
+    <insert schemaName="poc" tableName="data">
+      <column name="id" value="2"/>
+      <column name="string_value" value="a string value"/>
+    </insert>
+    <insert schemaName="poc" tableName="data">
+      <column name="id" value="3"/>
+      <column name="date_value" value="2015-10-10"/>
+    </insert>
+    <insert schemaName="poc" tableName="data">
+      <column name="id" value="4"/>
+      <column name="timestamp_value" value="${now}"/>
+    </insert>
+  </changeSet>
+
+</databaseChangeLog>
