@@ -246,6 +246,11 @@ public class JtaTest {
 
     dataService.createData(getNewData());
 
+    List<Data> beforeRollbackData = dataService.getAllData();
+
+    assertEquals(beforeData.size() + 1, beforeRollbackData.size(),
+        "Failed to retrieve the correct number of data objects");
+
     try (Connection connection = db1DataSource.getConnection()) {
       try (PreparedStatement statement = connection.prepareStatement(
           "INSERT INTO poc.data (id, integer_value, string_value, date_value, timestamp_value) VALUES (?, ?, ?, ?, ?)")) {
@@ -289,11 +294,6 @@ public class JtaTest {
         statement.executeUpdate();
       }
     }
-
-    List<Data> beforeRollbackData = dataService.getAllData();
-
-    assertEquals(beforeData.size() + 1, beforeRollbackData.size(),
-        "Failed to retrieve the correct number of data objects");
 
     try (Connection connection = db2DataSource.getConnection()) {
       try (PreparedStatement statement = connection.prepareStatement("SELECT id FROM poc.data")) {
@@ -353,6 +353,65 @@ public class JtaTest {
     LocalDateTime now = LocalDateTime.now();
 
     return new Data(id, random.nextInt(), "Data " + id, now.toLocalDate(), now);
+  }
+
+  //@Test
+  void recoveryTest() throws Exception {
+
+    //Thread.sleep(300000L);
+
+    Transaction existingTransaction = transactionManager.suspend();
+
+    transactionManager.begin();
+
+    System.out.println("Current transaction: " + transactionManager.getTransaction().toString());
+
+    dataService.createData(getNewData());
+
+    try (Connection connection = db1DataSource.getConnection()) {
+      try (PreparedStatement statement = connection.prepareStatement(
+          "INSERT INTO poc.data (id, integer_value, string_value, date_value, timestamp_value) VALUES (?, ?, ?, ?, ?)")) {
+        int value = random.nextInt();
+
+        statement.setLong(1, System.currentTimeMillis());
+        statement.setInt(2, value);
+        statement.setString(3, "New Test Data " + value);
+        statement.setObject(4, LocalDate.now());
+        statement.setObject(5, LocalDateTime.now());
+
+        statement.executeUpdate();
+      }
+    }
+
+    try (Connection connection = db2DataSource.getConnection()) {
+      try (PreparedStatement statement = connection.prepareStatement(
+          "INSERT INTO poc.data (id, integer_value, string_value, date_value, timestamp_value) VALUES (?, ?, ?, ?, ?)")) {
+        int value = random.nextInt();
+
+        statement.setLong(1, System.currentTimeMillis());
+        statement.setInt(2, value);
+        statement.setString(3, "New Test Data " + value);
+        statement.setObject(4, LocalDate.now());
+        statement.setObject(5, LocalDateTime.now());
+
+        statement.executeUpdate();
+      }
+    }
+
+    /*
+     * To check transaction recovery, place a breakpoint after the line below (~line 1508) in the
+     * com.arjuna.ats.arjuna.coordinator.BasicAction class and abort the application after the
+     * prepare phase of the XA 2-phase commit process.
+     *
+     * Place breakpoint after this ---> int prepareStatus = prepare(reportHeuristics);
+     *
+     * To confirm there are prepared transactions on PostgreSQL, which need to be recovered execute:
+     *
+     * SELECT * FROM pg_catalog.pg_prepared_xacts
+     */
+    transactionManager.commit();
+
+    transactionManager.resume(existingTransaction);
   }
 }
 

@@ -47,8 +47,6 @@ public class XAExceptionUtil {
    * @param message   the message
    *
    * @return the XAException object
-   *
-   * @return the XAException object
    */
   public static XAException xaException(int errorCode, String message) {
     XAException xaException = new XAException(message);

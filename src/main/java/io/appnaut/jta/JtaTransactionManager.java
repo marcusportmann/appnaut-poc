@@ -63,6 +63,7 @@ import javax.transaction.UserTransaction;
 @EachBean(DataSource.class)
 @Replaces(HibernateTransactionManager.class)
 @TypeHint(JtaTransactionManager.class)
+@SuppressWarnings("unused")
 public class JtaTransactionManager extends
     AbstractSynchronousTransactionManager<Connection> {
 
@@ -384,52 +385,6 @@ public class JtaTransactionManager extends
   protected boolean useSavepointForNestedTransaction() {
     return false;
   }
-
-//  /**
-//   * The <b>AfterCompletionSynchronization</b> class holds the Micronaut transaction synchronization
-//   * callbacks that should be invoked when a JTA transaction completes.
-//   *
-//   * @author Marcus Portmann
-//   */
-//  private class AfterCompletionSynchronizationx implements Synchronization {
-//
-//    private final List<TransactionSynchronization> synchronizations;
-//
-//    /**
-//     * Constructs a new <b>JtaAfterCompletionSynchronization</b>.
-//     *
-//     * @param synchronizations the transaction synchronization callbacks that should be invoked when
-//     *                         the JTA transaction completes
-//     */
-//    public AfterCompletionSynchronization(List<TransactionSynchronization> synchronizations) {
-//      this.synchronizations = synchronizations;
-//    }
-//
-//    @Override
-//    public void afterCompletion(int status) {
-//      switch (status) {
-//        case Status.STATUS_COMMITTED:
-//          try {
-//            TransactionSynchronizationUtils.invokeAfterCommit(this.synchronizations);
-//          } finally {
-//            TransactionSynchronizationUtils.invokeAfterCompletion(
-//                this.synchronizations, TransactionSynchronization.Status.COMMITTED);
-//          }
-//          break;
-//        case Status.STATUS_ROLLEDBACK:
-//          TransactionSynchronizationUtils.invokeAfterCompletion(
-//              this.synchronizations, TransactionSynchronization.Status.ROLLED_BACK);
-//          break;
-//        default:
-//          TransactionSynchronizationUtils.invokeAfterCompletion(
-//              this.synchronizations, TransactionSynchronization.Status.UNKNOWN);
-//      }
-//    }
-//
-//    @Override
-//    public void beforeCompletion() {
-//    }
-//  }
 
   /**
    * The <b>AfterCompletionSynchronization</b> class holds the Micronaut transaction synchronization

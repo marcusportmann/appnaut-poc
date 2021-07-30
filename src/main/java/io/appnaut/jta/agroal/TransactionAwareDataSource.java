@@ -35,6 +35,7 @@ import javax.sql.DataSource;
 @Singleton
 @Replaces(io.micronaut.transaction.jdbc.TransactionAwareDataSource.class)
 @Requires(missingBeans = io.micronaut.jdbc.spring.DataSourceTransactionManagerFactory.class)
+@SuppressWarnings("unused")
 public class TransactionAwareDataSource implements BeanCreatedEventListener<DataSource> {
 
   /**

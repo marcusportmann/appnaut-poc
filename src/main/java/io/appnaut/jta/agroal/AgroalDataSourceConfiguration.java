@@ -31,6 +31,7 @@ import java.util.Properties;
  * @author Marcus Portmann
  */
 @EachProperty(value = BasicJdbcConfiguration.PREFIX, primary = "default")
+@SuppressWarnings("unused")
 public class AgroalDataSourceConfiguration implements BasicJdbcConfiguration {
 
   private final CalculatedSettings calculatedSettings;

@@ -34,7 +34,7 @@
   <entry key="CoordinatorEnvironmentBean.commitOnePhase">YES</entry>
 
   <!-- default is under user.home - must be writeable!) -->
-  <!-- for the test purposes we want  the temporary data being placed in target directory -->
+  <!-- for the test purposes we want the temporary data being placed in target directory -->
   <entry key="ObjectStoreEnvironmentBean.objectStoreDir">target</entry>
 
   <!-- (default is ON) -->
@@ -142,5 +142,4 @@
   <entry key="RecoveryEnvironmentBean.periodicRecoveryPeriod">3</entry>
   <entry key="RecoveryEnvironmentBean.recoveryBackoffPeriod">1</entry>
   -->
-
 </properties>

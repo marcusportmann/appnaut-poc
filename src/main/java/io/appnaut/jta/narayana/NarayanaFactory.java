@@ -34,6 +34,7 @@ import javax.transaction.UserTransaction;
  * @see <a href="https://narayana.io">Naryana</a>
  */
 @Factory
+@SuppressWarnings("unused")
 public class NarayanaFactory {
 
   static {

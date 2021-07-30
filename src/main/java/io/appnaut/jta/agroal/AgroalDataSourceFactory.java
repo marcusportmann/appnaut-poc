@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
  * @author Marcus Portmann
  */
 @Factory
+@SuppressWarnings("unused")
 public class AgroalDataSourceFactory implements AutoCloseable {
 
   private static final Logger logger = LoggerFactory.getLogger(AgroalDataSourceFactory.class);
