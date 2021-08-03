@@ -20,6 +20,7 @@ import io.micronaut.configuration.hibernate.jpa.JpaConfiguration;
 import io.micronaut.context.event.BeanCreatedEvent;
 import io.micronaut.context.event.BeanCreatedEventListener;
 import javax.inject.Singleton;
+import org.hibernate.cfg.AvailableSettings;
 
 /**
  * The <b>JpaConfigurationListener</b> class implements a BeanCreatedEventListener that modifies the
@@ -36,8 +37,9 @@ public class JpaConfigurationListener implements BeanCreatedEventListener<JpaCon
     JpaConfiguration jpaConfiguration = event.getBean();
 
     // Enable JTA transaction support for Hibernate
-    jpaConfiguration.getProperties().put("hibernate.transaction.coordinator_class", "jta");
-    jpaConfiguration.getProperties().put("hibernate.transaction.jta.platform", "JBossTS");
+    jpaConfiguration.getProperties().put(AvailableSettings.TRANSACTION_COORDINATOR_STRATEGY, "jta");
+    jpaConfiguration.getProperties().put(AvailableSettings.JTA_PLATFORM, "JBossTS");
+    //jpaConfiguration.getProperties().put(AvailableSettings.PERSISTENCE_UNIT_NAME, "xxx");
 
     return jpaConfiguration;
   }

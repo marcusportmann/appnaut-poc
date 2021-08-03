@@ -19,7 +19,6 @@ package io.appnaut.jta.narayana;
 import com.arjuna.ats.arjuna.coordinator.TxControl;
 import com.arjuna.ats.arjuna.recovery.RecoveryManager;
 import io.micronaut.context.annotation.Bean;
-import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
 import javax.transaction.TransactionManager;
@@ -57,18 +56,17 @@ public class NarayanaFactory {
   }
 
   /**
-   * Returns the Narayana recovery XA resource registry.
+   * Returns the Narayana recovery manager.
    *
-   * @return the Narayana recovery XA resource registry
+   * @return the Narayana recovery manager
    */
   @Bean
-  @Context
   public RecoveryManager recoveryManager() {
     RecoveryManager recoveryManager = RecoveryManager.manager();
 
     recoveryManager.initialize();
 
-    return RecoveryManager.manager();
+    return recoveryManager;
   }
 
   /**
@@ -77,7 +75,6 @@ public class NarayanaFactory {
    * @return the Narayana JTA transaction manager
    */
   @Bean
-  @Requires(beans = {TransactionSynchronizationRegistry.class})
   public TransactionManager transactionManager() {
     return com.arjuna.ats.jta.TransactionManager.transactionManager();
   }
@@ -88,6 +85,7 @@ public class NarayanaFactory {
    * @return the Narayana JTA transaction synchronization registry
    */
   @Bean
+  @Requires(beans = {TransactionManager.class})
   public TransactionSynchronizationRegistry transactionSynchronizationRegistry() {
     return new com.arjuna.ats.internal.jta.transaction.arjunacore
         .TransactionSynchronizationRegistryImple();
@@ -99,7 +97,6 @@ public class NarayanaFactory {
    * @return the Narayana JTA user transaction
    */
   @Bean
-  @Requires(beans = {TransactionSynchronizationRegistry.class, TransactionManager.class})
   public UserTransaction userTransaction() {
     return com.arjuna.ats.jta.UserTransaction.userTransaction();
   }

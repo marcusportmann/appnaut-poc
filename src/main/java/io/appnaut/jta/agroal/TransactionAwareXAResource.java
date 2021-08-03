@@ -222,7 +222,6 @@ public class TransactionAwareXAResource implements XAResource {
   @Override
   public void start(Xid xid, int flags) throws XAException {
     try {
-      System.out.println("The TransactionAwareXAResource for data source (" + dataSourceName + ") is starting work on the transaction branch (" + xid + ")");
       transactionAware.transactionStart();
       xaResource.start(xid, flags);
     } catch (XAException e) {
